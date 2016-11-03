@@ -11,4 +11,10 @@ describe('user', function() {
       done();
     });
   });
+
+  it('should converts username string to lowercase', function() {
+    var user = new User({username: 'POSTUSER'});
+
+    expect(user.username).to.equal('postuser');
+  });
 });
