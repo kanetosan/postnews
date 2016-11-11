@@ -1,5 +1,6 @@
 var expect = require('chai').expect;
 var mongoose = require('mongoose');
+var crypto = require('crypto');
 var User = require('../../models/Users');
 
 describe('user', function() {
@@ -36,5 +37,16 @@ describe('user', function() {
       });
     });
     promise.catch(done);
-  })
+  });
+
+  it('should set crypto password', function() {
+    var user = new User({username: 'postuser'});
+    user.setPassword('test123');
+
+    /* TODO: maybe test with mock if calls randomBytes */
+
+    var hash = crypto.pbkdf2Sync('test123', user.salt, 1000, 64).toString('hex');
+
+    expect(user.hash).to.equal(hash);
+  });
 });
