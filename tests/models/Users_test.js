@@ -1,8 +1,13 @@
 var expect = require('chai').expect;
-
+var mongoose = require('mongoose');
 var User = require('../../models/Users');
 
 describe('user', function() {
+  before(function (done) {
+    mongoose.connect('mongodb://localhost/postnews_test', done);
+    User.findOne({ 'username': 'postuser' }).remove().exec();
+  });
+
   it('should be invalid if username is empty', function(done) {
     var user = new User();
 
@@ -17,4 +22,19 @@ describe('user', function() {
 
     expect(user.username).to.equal('postuser');
   });
+
+  it('username should be unique', function(done) {
+    var user = new User({username: 'postuser'});
+    var promise = user.save();
+
+    promise.then(function() {
+      // Try saving a duplicate user
+      new User({username: 'postuser'}).save().catch(function(err) {
+        console.log('here');
+          expect(err.errors.username.message).to.equal('Error, expected `username` to be unique. Value: `postuser`');
+          done();
+      });
+    });
+    promise.catch(done);
+  })
 });
