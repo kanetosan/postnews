@@ -49,4 +49,18 @@ describe('user', function() {
 
     expect(user.hash).to.equal(hash);
   });
+
+  it('validPassword should return false', function() {
+    var user = new User({username: 'postuser'});
+    user.setPassword('test123');
+
+    expect(user.validPassword('123test')).to.be.false;
+  });
+
+  it('validPassword should return true', function() {
+    var user = new User({username: 'postuser'});
+    user.setPassword('test123');
+
+    expect(user.validPassword('test123')).to.be.true;
+  });
 });
