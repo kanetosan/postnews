@@ -63,4 +63,11 @@ describe('user', function() {
 
     expect(user.validPassword('test123')).to.be.true;
   });
+
+  it('should generate JWT', function() {
+    var user = new User({username: 'postuser'});
+    user.setPassword('test123');
+
+    console.log(user.generateJWT());
+  });
 });
